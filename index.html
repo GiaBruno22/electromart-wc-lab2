@@ -41,6 +41,40 @@
         </table>
       </div>
     </section>
+    <section aria-labelledby="levers-h">
+      <h2 id="levers-h">Levers</h2>
+      <p class="note">Move a slider to change the days. Revenue and COGS stay at their Before values.</p>
+      <div class="buttons">
+        <button type="button" id="set-before">Set to Before</button>
+        <button type="button" id="set-after">Set to After</button>
+      </div>
+
+      <div class="lever">
+        <label for="dio-slider">DIO (inventory days)</label>
+        <output id="dio-value" for="dio-slider"></output>
+        <input type="range" id="dio-slider" min="0" step="any">
+      </div>
+      <div class="lever">
+        <label for="dso-slider">DSO (collection days)</label>
+        <output id="dso-value" for="dso-slider"></output>
+        <input type="range" id="dso-slider" min="0" step="any">
+      </div>
+      <div class="lever">
+        <label for="dpo-slider">DPO (payment days)</label>
+        <output id="dpo-value" for="dpo-slider"></output>
+        <input type="range" id="dpo-slider" min="0" step="any">
+      </div>
+
+      <div class="table-wrap">
+        <table id="lever-table">
+          <thead>
+            <tr><th scope="col">Result</th><th scope="col">Before</th><th scope="col">Levers</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="note" id="lever-note"></p>
+    </section>
   </main>
 
   <footer>

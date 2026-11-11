@@ -94,9 +94,63 @@
     return { inventory, receivables, payables, total: inventory + receivables + payables };
   }
 
+  // ---------- Levers ----------
+  // Revenue and COGS stay at their Before values. The balance a lever implies is
+  // days × annual COGS (or revenue) / days in year.
+  function impliedBalances(levers, base, days) {
+    return {
+      inventory: levers.dio * base.cogs / days,
+      accounts_receivable: levers.dso * base.revenue / days,
+      accounts_payable: levers.dpo * base.cogs / days,
+    };
+  }
+
+  // Interest saved a year if every freed dollar pays down the bank line.
+  // Cash freed is capped at the bank line's Before balance. If cash freed is
+  // negative, ElectroMart borrows more, so the result is a negative saving.
+  function interestSaved(cashFreedTotal, bankLineBefore, bankRate) {
+    const paidDown = Math.min(cashFreedTotal, bankLineBefore);
+    return paidDown * bankRate;
+  }
+
+  // Days paid past the net due date, never less than zero.
+  function daysPastDue(dpoDays, netDays) {
+    return Math.max(0, dpoDays - netDays);
+  }
+
+  // Nominal annual cost of skipping a supplier discount:
+  // d / (1 − d) × days in year / (days paid − discount days).
+  // If DPO is within the discount period, ElectroMart takes the discount: returns null.
+  function discountCost(dpoDays, a) {
+    if (dpoDays <= a.discount_days) return null;
+    const d = a.supplier_discount;
+    return (d / (1 - d)) * (a.days_in_year / (dpoDays - a.discount_days));
+  }
+
+  // Everything the lever panel shows, for one set of slider values.
+  function leverResults(levers, before, a) {
+    const days = a.days_in_year;
+    const bal = impliedBalances(levers, before, days);
+    const freed = {
+      inventory: before.inventory - bal.inventory,
+      receivables: before.accounts_receivable - bal.accounts_receivable,
+      payables: bal.accounts_payable - before.accounts_payable,
+    };
+    freed.total = freed.inventory + freed.receivables + freed.payables;
+    return {
+      ccc: levers.dio + levers.dso - levers.dpo,
+      balances: bal,
+      cashFreed: freed,
+      interestSaved: interestSaved(freed.total, before.notes_payable, a.bank_rate),
+      daysPastDue: daysPastDue(levers.dpo, a.net_days),
+      discountCost: discountCost(levers.dpo, a),
+    };
+  }
+
   const api = {
     parseCSV, statementsFromRows, assumptionsFromRows,
     dio, dso, dpo, ccc, dayCounts, cashFreed, cashFreedFromDays,
+    impliedBalances, interestSaved, daysPastDue, discountCost, leverResults,
   };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;

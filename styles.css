@@ -58,6 +58,40 @@ tbody th { font-weight: 500; }
 td { text-align: right; white-space: nowrap; }
 tr.total th, tr.total td { font-weight: 700; border-bottom: none; border-top: 2px solid var(--text); }
 
+.buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+button {
+  font: inherit;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+}
+button:hover { background: var(--accent); color: var(--card); }
+
+.lever {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 2px 8px;
+  margin-bottom: 14px;
+}
+.lever label { font-weight: 500; }
+.lever output { font-variant-numeric: tabular-nums; font-weight: 700; }
+.lever input[type="range"] { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); margin: 4px 0 0; }
+
+tr.section-row th {
+  padding-top: 14px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  font-weight: 600;
+}
+td.neg { color: var(--error); }
+th .hint { display: block; font-size: 0.78rem; color: var(--muted); font-weight: 400; white-space: normal; }
+
 .status { margin: 16px 0 0; color: var(--muted); }
 .status.error { color: var(--error); }
 
